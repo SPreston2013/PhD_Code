@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from scipy import integrate 
 from scipy.integrate import solve_ivp
 from scipy.interpolate import interp1d
-from RK45_Background import Background_Output
+from Background import Background_Output
 
 np.set_printoptions(threshold=np.inf)
 
