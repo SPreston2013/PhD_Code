@@ -15,7 +15,7 @@ dln(aH)/dN = epsilon - 1.
 
 This allows us to calculate the scale factor (a) by taking the array aH and dividing by the H derived from the background code. 
 
-The main code for the computation of the scalar power spectrum is file Muk.py. This code pulls the results from Background.py and aH.py and plots the power spectrum P(k). It does this by solving the Mukhanov equation (in terms of e-fold) for a range of wavenumbers (k) to find the value of the Mukhanov variable at horizon exit. 
+The main code for the computation of the scalar power spectrum is the file Muk.py. This code pulls the results from Background.py and aH.py and plots the power spectrum P(k). It does this by solving the Mukhanov equation (in terms of e-fold) for a range of wavenumbers (k) to find the value of the Mukhanov variable at horizon exit. 
 
 
 
