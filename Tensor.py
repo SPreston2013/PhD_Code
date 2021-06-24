@@ -58,18 +58,24 @@ def ep(t):
 def sol(t, Y):
     """Tensor equation"""
     return np.array((Y[1], (1 - ep(t))*Y[1] -((k/aH(t))**2 - (2 - ep(t)))*Y[0]))
-
+    
+######################################################################
+#Create Ni function.
+def Ni_find(t):
+    """ODE equation from aH code."""
+    return ep(t) - 1
+    
 ######################################################################
 
 #Tensor Power spectrum
 def h_spec(k, He, h):
     """Tensor power spectrum P(t)"""
-    return np.array(((2*k**3/np.pi**2) * h))
+    return np.array(((k**3/np.pi**2) * h))
     
 #Define slow-roll power spectrum.
-def SlowRoll_h_Spec(H):
+def SlowRoll_h_Spec(t):
     """Slow-Roll power spectrum"""
-    return 14*((H**2)/(8*np.pi**2))
+    return (2./(np.pi**2))*H(t)**2
 ######################################################################
 
 #Create empty lists.
@@ -81,12 +87,34 @@ He = []
 
 aHe = []
 
+Sh_spec = []
+
 for k in k_a:
 #efold to stop the code, runs from Ni to Ne
-    Ni = 60.00000001 - np.log(k/k_a[0])
+    area = 0.0
     
-    Ne = np.array(60.0 - np.log(k/k_a[0]))
+    step = 0.001
     
+    left = 60.0 - np.log(k/k_a[0])
+    
+    right = left + step
+    
+    while(area>np.log(.1)):
+    
+        left = left + step
+        
+        right = right + step
+    
+        trap = (step/2.)*(Ni_find(left)+ Ni_find(right))
+        
+        area = area + trap
+     
+     
+    Ni = (left+right)/2.
+    
+    Ne = 0.94*(60.0 - np.log(k/k_a[0]))
+    
+    Ne_slow = 60.0 - np.log(k/k_a[0])
 #u_k real I.C
     vr_0 = np.array([1/(np.sqrt(2*k)), 0])
 #u_k imaginary I.C
@@ -101,6 +129,8 @@ for k in k_a:
     H_e = H(Ne)
     
     aH_e = aH(Ne)
+    
+    slow_h = SlowRoll_h_Spec(Ne_slow)
 
 #Take the solutions from the solver.
     vrs = solr.y[0]
@@ -122,6 +152,8 @@ for k in k_a:
     He.append(H_e)
     
     aHe.append(aH_e)
+    
+    Sh_spec.append(slow_h)
    
 
 
@@ -147,8 +179,6 @@ h = hr**2 + hi**2
 
 #Input arrays
 h_spec = h_spec(k_a, He, h)
-
-Sh_spec = SlowRoll_h_Spec(He)
 
 #Print initial value of tensor power spectrum to terminal.
 print()
