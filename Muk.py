@@ -138,7 +138,7 @@ for k in k_a:
      
     Ni = (left+right)/2.
     
-    Ne = 60.0 - np.log(k/k_a[0])
+    Ne = 0.5*(60.0 - np.log(k/k_a[0]))
 #u_k real I.C
     ur_0 = [1/(np.sqrt(2*k)), 0] #1/root Mpc^(-1)
 #u_k imaginary I.C
@@ -167,7 +167,7 @@ for k in k_a:
     
 #Slow-roll power spectrum to compare with Mukhanov solution.
 
-    s = ((1 - epfunc(Ne)[()] + ((0.0814514 - 3)/8)*sigma(Ni))**2)*(1/(8*np.pi**2))*((H(Ne)**2)/ep(Ne))
+    s = ((1 - epfunc(Ne)[()] + ((0.0814514 - 3)/8)*sigma(Ne))**2)*(1/(8*np.pi**2))*((H(Ne)**2)/ep(Ne))
     
     
     
@@ -251,60 +251,6 @@ plt.show()
 #Save results to file
 
 np.save('Muk', m_spec)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
