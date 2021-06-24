@@ -21,7 +21,7 @@ print()
 plt.rcParams["font.size"] = 6
 plt.autoscale(enable=True, axis='both', tight=None)
 
-points = int(100.) #Plot points used in k array.
+points = int(10.) #Plot points used in k array.
 ######################################################################
 #H, H', N and epsilon from background code.
 H_a = Background_Output[0]
@@ -104,6 +104,11 @@ R_r = []
 R_i = []
 
 s_spec = []
+######################################################################
+#Create Ni function.
+def N_i(t):
+    """ODE equation from aH code."""
+    return ep(t) - 1
 
 ######################################################################
 #Solve Mukhanov equation for each mode k in k_a.
@@ -111,7 +116,20 @@ s_spec = []
 for k in k_a:
 
 #Define e-fold to start and stop the code, runs from Ni to Ne
-    Ni = 60.00000001 - np.log(k/k_a[0])
+    
+    k_aHi = 0.0
+    
+    k_aH = [k_aHi]
+
+    while(k_aH[-1]>np.log(0.01)):
+    
+        area = k_aH[-1] + ((0.2/2)*(N_i(60.0 - np.log(k/k_a[0])) + N_i(68.0)))
+ 
+        print(area)
+        
+        k_aH.append(area)
+    
+    
     Ne = 60.0 - np.log(k/k_a[0])
 #u_k real I.C
     ur_0 = [1/(np.sqrt(2*k)), 0] #1/root Mpc^(-1)
@@ -192,6 +210,7 @@ print()
 #Plot the power spectrum.
 
 plt.plot(k_a, m_spec, label = 'P(k)')
+
 plt.plot(k_a, s_spec, label = 'P(k) slow roll')
 
 #Plot Mukhanov variable against e-fold (if required).
@@ -224,6 +243,31 @@ plt.show()
 #Save results to file
 
 np.save('Muk', m_spec)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
