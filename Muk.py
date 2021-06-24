@@ -106,7 +106,7 @@ R_i = []
 s_spec = []
 ######################################################################
 #Create Ni function.
-def N_i(t):
+def Ni_find(t):
     """ODE equation from aH code."""
     return ep(t) - 1
 
@@ -117,18 +117,26 @@ for k in k_a:
 
 #Define e-fold to start and stop the code, runs from Ni to Ne
     
-    k_aHi = 0.0
+    area = 0.0
     
-    k_aH = [k_aHi]
-
-    while(k_aH[-1]>np.log(0.01)):
+    step = 0.001
     
-        area = k_aH[-1] + ((0.2/2)*(N_i(60.0 - np.log(k/k_a[0])) + N_i(68.0)))
- 
-        print(area)
+    left = 60.0 - np.log(k/k_a[0])
+    
+    right = left + step
+    
+    while(area>np.log(.1)):
+    
+        left = left + step
         
-        k_aH.append(area)
+        right = right + step
     
+        trap = (step/2.)*(Ni_find(left)+ Ni_find(right))
+        
+        area = area + trap
+     
+     
+    Ni = (left+right)/2.
     
     Ne = 60.0 - np.log(k/k_a[0])
 #u_k real I.C
@@ -243,6 +251,35 @@ plt.show()
 #Save results to file
 
 np.save('Muk', m_spec)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
