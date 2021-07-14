@@ -18,39 +18,34 @@ from scipy.integrate import quad
 
 from scipy.interpolate import interp1d
 
+from input import m_potential
+
+from input import n_potential
+
+from input import v_func
+
+from input import vprime
+
+from input import ti
+
 
 plt.rcParams["font.size"] = 6
 
 plt.autoscale(enable=True, axis='both', tight=None)
 ##############################################################
-n_potential = 2.
+
+print()
 
 print('Calculating Background Variables for n = ', n_potential)
+
 print()
 
 #Globals
-m_potential = 4.44e-6
 
 tiny = 1e-6 # when to use taylor expansion for sinh cosh tanh?
 
 h = np.float64(-5e-4 )# Step size for ODE
 
-
-#Define Potential 
-
-def v_func(t):
-
-    """Potential for a given inflation model."""
-
-    return np.float64(0.5 * m_potential**2 * t**n_potential) # unit = Mpl^4
-
-
-
-def vprime(t):
-
-    """Potential derivative for a given inflation model."""
-
-    return np.float64(0.5 * m_potential**2 * n_potential*t**(n_potential-1)) # unit = Mpl^4
 
 ##############################################################
 
@@ -63,19 +58,14 @@ def f(y, t):
     """H-J equation to be solved using RK45."""
 
     return sqrt(1.5) - 0.5*vprime(t)/(tanh(y)*v_func(t))
-##############################################################
-
-# I.C. Choose initial H and initial phi
-
-
-ti = 100. #0.5/m_potential #Phi_initial. [unit = Mpl].. For r<<1, need phi_i to be roughly ~1/m
-
-
-Hi = sqrt(v_func(ti)/2.5) # initial H, unit = Mpl, this must be between sqrt(V/3) and sqrt(V/2)
 
 ##############################################################
 
 # Choices above result in the following conditions for RK4
+
+
+Hi = sqrt(v_func(ti)/2.5) # initial H, unit = Mpl, this must be between sqrt(V/3) and sqrt(V/2)
+
 
 
 dHi = sqrt(1.5*Hi**2-0.5*v_func(ti))   # initial dH/dphi determined by HJ, unitless (in Planck units)
@@ -230,7 +220,7 @@ while (ep<1.):
 print("Inflation ends at:  phi = ",  tlist_i[-1], '   H = ' ,  Hlist_i[-1], '   eps= ', eplist_i[-1])
 
 
-Ntot = -h*sum(dNlist_i) #replace by something more advanced.
+Ntot = -h*sum(dNlist_i) 
 
 
 
@@ -244,7 +234,7 @@ else: #Trim the array to find the correct initial condition
 
     dNcount =dNlist_i[j]
 
-    dNbound=-68.5/h # total efold desired
+    dNbound=-70.0/h # total efold desired
 
     while (dNcount<dNbound):
 
@@ -312,18 +302,18 @@ print()
 
 # Plot for test.
 
-#plt.title('$\epsilon(\phi)$ v.s N for n = ' +str(n_potential))
+plt.title('$\epsilon(\phi)$ v.s N for n = ' +str(n_potential))
 
 
-#plt.plot(Nlist_i, eplist_i, '-r')
+plt.plot(Nlist_i, eplist_i, '-r')
 
 
-#plt.xlabel('N')
+plt.xlabel('N')
 
 
-#plt.ylabel('$\epsilon$')
+plt.ylabel('$\epsilon$')
 
-#plt.show()
+plt.show()
 
 #Make N increase to use spline
 N_arr = np.array(Nlist_i[::-1])
